@@ -91,7 +91,7 @@ def build_sam2_video_predictor(
     cfg = compose(config_name=config_file, overrides=hydra_overrides)
     OmegaConf.resolve(cfg)
     model = instantiate(cfg.model, _recursive_=True)
-    _load_checkpoint(model, ckpt_path)
+    # _load_checkpoint(model, ckpt_path)
     model = model.to(device)
     if mode == "eval":
         model.eval()

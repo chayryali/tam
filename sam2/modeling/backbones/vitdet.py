@@ -64,12 +64,12 @@ class Attention(nn.Module):
         q = q.view(B, self.num_heads, H * W, -1)
         k = k.view(B, self.num_heads, H * W, -1)
         v = v.view(B, self.num_heads, H * W, -1)
-        with torch.backends.cuda.sdp_kernel(
-            enable_flash=True,
-            enable_math=True,
-            enable_mem_efficient=True,
-        ):
-            x = F.scaled_dot_product_attention(q, k, v)
+        # with torch.backends.cuda.sdp_kernel(
+        #     enable_flash=True,
+        #     enable_math=True,
+        #     enable_mem_efficient=True,
+        # ):
+        x = F.scaled_dot_product_attention(q, k, v)
         x = (
             x.view(B, self.num_heads, H, W, -1)
             .permute(0, 2, 3, 1, 4)
