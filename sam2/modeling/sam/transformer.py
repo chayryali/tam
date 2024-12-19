@@ -245,12 +245,12 @@ class Attention(nn.Module):
         dropout_p = self.dropout_p if self.training else 0.0
         # Attention
 
-        with torch.backends.cuda.sdp_kernel(
-            enable_flash=True,
-            enable_math=True,
-            enable_mem_efficient=True,
-        ):
-            out = F.scaled_dot_product_attention(q, k, v)
+        # with torch.backends.cuda.sdp_kernel(
+        #     enable_flash=True,
+        #     enable_math=True,
+        #     enable_mem_efficient=True,
+        # ):
+        out = F.scaled_dot_product_attention(q, k, v)
 
         out = self._recombine_heads(out)
         out = self.out_proj(out)
@@ -276,7 +276,7 @@ class RoPEAttention(Attention):
             compute_axial_cis, dim=self.internal_dim // self.num_heads, theta=rope_theta
         )
         freqs_cis = self.compute_cis(end_x=feat_sizes[0], end_y=feat_sizes[1])
-        self.freqs_cis = freqs_cis
+        self.freqs_cis = freqs_cis.to("cuda") if torch.cuda.is_available() else freqs_cis
         self.rope_k_repeat = rope_k_repeat
 
     def forward(
@@ -310,12 +310,12 @@ class RoPEAttention(Attention):
 
         dropout_p = self.dropout_p if self.training else 0.0
 
-        with torch.backends.cuda.sdp_kernel(
-            enable_flash=True,
-            enable_math=True,
-            enable_mem_efficient=True,
-        ):
-            out = F.scaled_dot_product_attention(q, k, v, dropout_p=dropout_p)
+        # with torch.backends.cuda.sdp_kernel(
+        #     enable_flash=True,
+        #     enable_math=True,
+        #     enable_mem_efficient=True,
+        # ):
+        out = F.scaled_dot_product_attention(q, k, v, dropout_p=dropout_p)
 
         out = self._recombine_heads(out)
         out = self.out_proj(out)
