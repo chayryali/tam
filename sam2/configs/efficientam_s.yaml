@@ -43,7 +43,7 @@ model:
       self_attention:
         _target_: sam2.modeling.sam.transformer.RoPEAttention
         rope_theta: 10000.0
-        feat_sizes: [32, 32]
+        feat_sizes: [64, 64]
         embedding_dim: 256
         num_heads: 1
         downsample_rate: 1
@@ -54,7 +54,7 @@ model:
       cross_attention:
         _target_: sam2.modeling.sam.transformer.RoPEAttention
         rope_theta: 10000.0
-        feat_sizes: [32, 32]
+        feat_sizes: [64, 64]
         rope_k_repeat: True
         embedding_dim: 256
         num_heads: 1
@@ -120,4 +120,4 @@ model:
   use_mlp_for_obj_ptr_proj: true
   # Compilation flag
   # HieraT does not currently support compilation, should always be set to False
-  compile_image_encoder: false
+  compile_image_encoder: true
